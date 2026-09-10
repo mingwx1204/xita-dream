@@ -1,0 +1,18 @@
+*.iml
+.gradle
+/local.properties
+/.idea
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+app/src/main/jniLibs
+app/release
+app/basic
+app/filter
+app/src/main/assets/qnnlibs
+
+# Kotlin compiler session artifacts
+.kotlin/
