@@ -26,6 +26,7 @@ public class EngineBridge {
 
     /** 引擎自动拉起的模型优先序：{modelId, backendType, width, height} */
     private static final String[][] PRIORITY = {
+            {"illustrious_v17", "sdxl", "1024", "1024"},
             {"illustrious_v16_dmd2", "sdxl", "1024", "1024"},
             {"cyber_realistic_v10_dmd2", "sdxl", "1024", "1024"},
             {"illustrious_v16", "sdxl", "1024", "1024"},

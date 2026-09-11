@@ -109,6 +109,7 @@ public class PhoneChannel {
             case "engine.start": return engineStart(ctx, p);
             case "engine.stop": return engineStop(ctx);
             case "engine.download": return engineDownload(ctx, p);
+            case "engine.mark": return engineMark(ctx, p);
             default: {
                 JSONObject r = new JSONObject();
                 r.put("ok", false);
@@ -309,6 +310,26 @@ public class PhoneChannel {
         JSONObject r = new JSONObject();
         r.put("ok", true);
         r.put("wl_enabled", on);
+        return r;
+    }
+
+    /** 引擎模型标记文件：{id, name} → 在 <models>/<id>/ 下创建空标记（白名单校验，防穿越；如 V_PRED/.patch） */
+    private static JSONObject engineMark(Context ctx, JSONObject p) throws Exception {
+        String id = p.optString("id", "");
+        String name = p.optString("name", "");
+        if (!id.matches("[A-Za-z0-9_.\\-]{1,64}") || !name.matches("[A-Za-z0-9_.\\-]{1,64}")) {
+            throw new Exception("bad id/name");
+        }
+        File dir = new File(EngineBridge.modelsDir(ctx), id);
+        if (!dir.isDirectory()) {
+            throw new Exception("model dir not found: " + id);
+        }
+        File f = new File(dir, name);
+        boolean created = f.createNewFile();
+        JSONObject r = new JSONObject();
+        r.put("ok", true);
+        r.put("path", f.getAbsolutePath());
+        r.put("created", created);
         return r;
     }
 
