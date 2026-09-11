@@ -78,6 +78,9 @@ public class EngineBridge {
         } catch (Exception e) {
             Log.e(TAG, "engine start failed: " + e);
         }
+        // 顺手保证通道在，并自检一次（坏链自动重连）——她每次出笔前的唤醒都会走到这里，等于每次画画前顺一遍线
+        EngineTunnel.ensureStarted();
+        EngineTunnel.heal();
     }
 
     public static void stopEngine(Context ctx) {
