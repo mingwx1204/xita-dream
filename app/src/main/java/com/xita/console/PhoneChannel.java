@@ -332,6 +332,7 @@ public class PhoneChannel {
         } catch (Exception ignored) {
         }
         r.put("api_8081", api);
+        r.put("tunnel", EngineTunnel.isUp());
         return r;
     }
 

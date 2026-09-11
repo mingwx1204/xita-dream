@@ -1,6 +1,7 @@
 package io.github.xororz.localdream
 
 import android.app.Application
+import com.xita.console.EngineTunnel
 import io.github.xororz.localdream.data.HistoryMigration
 import io.github.xororz.localdream.data.MigrationState
 import io.github.xororz.localdream.data.db.AppDatabase
@@ -24,6 +25,7 @@ class LocalDreamApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        EngineTunnel.ensureStarted()
         startMigration()
     }
 
