@@ -194,28 +194,26 @@ public class EngineBridge {
     }
 
     private static void unzip(File zip, File dest) throws Exception {
-        String destPath = dest.getCanonicalPath();
+        // 与官方下载器一致：全部条目按“文件名”扁平化到顶层（丢弃目录壳）
         ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(zip)));
         ZipEntry e;
         byte[] buf = new byte[1 << 16];
         while ((e = zis.getNextEntry()) != null) {
-            File out = new File(dest, e.getName());
-            if (!out.getCanonicalPath().startsWith(destPath)) {
-                continue;
-            }
-            if (e.isDirectory()) {
-                out.mkdirs();
-            } else {
-                File parent = out.getParentFile();
-                if (parent != null) {
-                    parent.mkdirs();
+            if (!e.isDirectory()) {
+                String name = e.getName();
+                int slash = name.lastIndexOf('/');
+                if (slash >= 0) {
+                    name = name.substring(slash + 1);
                 }
-                FileOutputStream fos = new FileOutputStream(out);
-                int n;
-                while ((n = zis.read(buf)) > 0) {
-                    fos.write(buf, 0, n);
+                if (!name.isEmpty() && !name.startsWith(".") && !name.startsWith("__MACOSX")) {
+                    File out = new File(dest, name);
+                    FileOutputStream fos = new FileOutputStream(out);
+                    int n;
+                    while ((n = zis.read(buf)) > 0) {
+                        fos.write(buf, 0, n);
+                    }
+                    fos.close();
                 }
-                fos.close();
             }
             zis.closeEntry();
         }
